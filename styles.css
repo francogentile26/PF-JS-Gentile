@@ -83,6 +83,13 @@ form button:hover {
     padding: 1rem;
     background: #eee;
     border-radius: 4px;
+    white-space: pre-line;
+}
+
+#error {
+    color: red;
+    font-weight: bold;
+    margin-top: 1rem;
 }
 
 footer {

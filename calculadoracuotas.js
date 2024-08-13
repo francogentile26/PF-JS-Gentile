@@ -27,7 +27,7 @@ function calcularCuotas() {
     const plazo = parseInt(document.getElementById('plazo').value);
 
     if (!validarInputs(monto, tasa, plazo)) {
-        document.getElementById('resultado').innerText = "Por favor, ingrese valores válidos.";
+        mostrarError("Por favor, ingrese valores válidos.");
         return;
     }
 
@@ -36,17 +36,14 @@ function calcularCuotas() {
 
     document.getElementById('resultado').innerText = `Cuota mensual: ${cuota.toFixed(2)} Pesos.`;
 
-    // Crear un objeto Vehiculo y agregarlo al array
     const vehiculo = new Vehiculo(monto, tasa, plazo);
+    guardarVehiculo(vehiculo);
     console.log(vehiculo);
 }
 
 // Función para validar los inputs
 function validarInputs(monto, tasa, plazo) {
-    if (isNaN(monto) || isNaN(tasa) || isNaN(plazo) || monto <= 0 || tasa <= 0 || plazo <= 0) {
-        return false;
-    }
-    return true;
+    return !(isNaN(monto) || isNaN(tasa) || isNaN(plazo) || monto <= 0 || tasa <= 0 || plazo <= 0);
 }
 
 // Función para mostrar el plan de amortización
@@ -70,7 +67,6 @@ function mostrarAmortizacion() {
             montoRestante -= principal;
         }
 
-        // Crear un objeto Cuota y agregarlo al array
         const cuotaObj = new Cuota(mes, cuota.toFixed(2), interes.toFixed(2), principal.toFixed(2), montoRestante.toFixed(2));
         cuotas.push(cuotaObj);
 
@@ -79,28 +75,40 @@ function mostrarAmortizacion() {
         mes++;
     }
 
+    guardarCuotas(cuotas);
     console.log(cuotas); // Mostrar las cuotas en la consola
 }
 
-// Ejemplo adicional usando prompt y alert
-function capturarDatosPrompt() {
-    const monto = parseFloat(prompt("Ingrese el monto del vehículo:"));
-    const tasa = parseFloat(prompt("Ingrese la tasa de interés (%):"));
-    const plazo = parseInt(prompt("Ingrese el plazo (meses):"));
+// Función para mostrar errores
+function mostrarError(mensaje) {
+    const resultado = document.getElementById('resultado');
+    resultado.innerHTML = `<p id="error">${mensaje}</p>`;
+}
 
-    if (!validarInputs(monto, tasa, plazo)) {
-        alert("Por favor, ingrese valores válidos.");
-        return;
+// Funciones para guardar y cargar datos en el Storage
+function guardarVehiculo(vehiculo) {
+    localStorage.setItem('vehiculo', JSON.stringify(vehiculo));
+}
+
+function cargarVehiculo() {
+    const vehiculo = JSON.parse(localStorage.getItem('vehiculo'));
+    if (vehiculo) {
+        document.getElementById('monto').value = vehiculo.monto;
+        document.getElementById('tasa').value = vehiculo.tasa;
+        document.getElementById('plazo').value = vehiculo.plazo;
     }
-
-    tasaMensual = tasa / 100 / 12;
-    cuota = monto * (tasaMensual * Math.pow(1 + tasaMensual, plazo)) / (Math.pow(1 + tasaMensual, plazo) - 1);
-
-    alert(`Cuota mensual: ${cuota.toFixed(2)} Pesos.`);
 }
 
-// Función de ejemplo de búsqueda y filtrado en el array de cuotas
-function buscarCuotas(mes) {
-    return cuotas.filter(cuota => cuota.mes === mes);
+function guardarCuotas(cuotas) {
+    localStorage.setItem('cuotas', JSON.stringify(cuotas));
 }
 
+function cargarCuotas() {
+    return JSON.parse(localStorage.getItem('cuotas')) || [];
+}
+
+// Event Listeners
+document.getElementById('calcular-btn').addEventListener('click', calcularCuotas);
+document.getElementById('amortizacion-btn').addEventListener('click', mostrarAmortizacion);
+
+document.addEventListener('DOMContentLoaded', cargarVehiculo);

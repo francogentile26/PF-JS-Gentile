@@ -30,9 +30,8 @@
                 <label for="plazo">Plazo (meses):</label>
                 <input type="number" id="plazo" name="plazo" placeholder="Ingrese el plazo en meses" required>
                 
-                <button type="button" onclick="calcularCuotas()">Calcular Cuotas</button>
-                <button type="button" onclick="mostrarAmortizacion()">Mostrar Amortización</button>
-                <button type="button" onclick="capturarDatosPrompt()">Capturar Datos con Prompt</button> <!-- Nuevo botón -->
+                <button type="button" id="calcular-btn">Calcular Cuotas</button>
+                <button type="button" id="amortizacion-btn">Mostrar Amortización</button>
             </form>
             <div id="resultado"></div>
         </section>
@@ -50,5 +49,6 @@
     <script src="./calculadoracuotas.js"></script>
 </body>
 </html>
+
 
 
