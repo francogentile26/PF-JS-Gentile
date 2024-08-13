@@ -1,3 +1,24 @@
+document.getElementById('financiar-ford').addEventListener('click', function() {
+    document.getElementById('monto').value = 1000000;  // Monto del Ford Ka
+    document.getElementById('tasa').value = 1;         // Tasa de interés
+    document.getElementById('plazo').value = 24;        // Plazo en meses
+    document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' }); // Redirigir al simulador de cuotas
+});
+
+document.getElementById('financiar-fiat').addEventListener('click', function() {
+    document.getElementById('monto').value = 5000000;  // Monto del Fiat Cronos
+    document.getElementById('tasa').value = 2;        // Tasa de interés
+    document.getElementById('plazo').value = 24;       // Plazo en meses
+    document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' }); // Redirigir al simulador de cuotas
+});
+
+document.getElementById('financiar-ferrari').addEventListener('click', function() {
+    document.getElementById('monto').value = 10000000;  // Monto del Ferrari Enzo
+    document.getElementById('tasa').value = 4;         // Tasa de interés
+    document.getElementById('plazo').value = 48;        // Plazo en meses
+    document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' }); // Redirigir al simulador de cuotas
+});
+
 class Vehiculo {
     constructor(monto, tasa, plazo) {
         this.monto = monto;

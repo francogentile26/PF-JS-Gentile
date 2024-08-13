@@ -5,96 +5,223 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: #06b7ec;
     color: #333;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    flex: 1;
+}
+
 header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
+    background: #080953;
+    color: #ffffff;
+    padding: 2rem 0;
     text-align: center;
+    margin-bottom: 3rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 header nav ul {
     list-style: none;
+    display: flex;
+    justify-content: center;
 }
 
 header nav ul li {
-    display: inline;
-    margin: 0 1rem;
+    margin: 0 1.5rem;
 }
 
 header nav ul li a {
-    color: #fff;
+    color: #ffffff;
     text-decoration: none;
+    font-size: 1.2rem;
+}
+
+header nav ul li a:hover {
+    text-decoration: underline;
 }
 
 main {
     flex: 1;
-    padding: 2rem;
+    padding-bottom: 3rem;
 }
 
-main section {
-    background: #fff;
+.vehiculo {
+    background: #34b8e0;
     padding: 2rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.vehiculo h2 {
+    margin-bottom: 1rem;
+    color: #00264d;
+    font-size: 1.8rem;
+}
+
+.vehiculo-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.vehiculo img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 1rem;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
+.vehiculo-detalle {
+    max-width: 400px;
+    width: 100%;
+}
+
+.vehiculo-detalle p {
     margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.vehiculo-detalle button {
+    background: #00264d;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.vehiculo-detalle button:hover {
+    background: #004080;
+}
+
+#simulador {
+    background: #7e5454;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+}
+
+#simulador h2 {
+    margin-bottom: 1.5rem;
+    color: #00264d;
+    font-size: 1.8rem;
 }
 
 form label {
     display: block;
     margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #00264d;
 }
 
 form input {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.75rem;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 1rem;
 }
 
 form button {
-    background: #333;
+    background: #00264d;
     color: #fff;
     border: none;
     padding: 0.75rem 1.5rem;
+    font-size: 1rem;
     cursor: pointer;
     border-radius: 4px;
+    margin-right: 1rem;
+    transition: background 0.3s;
 }
 
 form button:hover {
-    background: #555;
+    background: #2b5d9b;
 }
 
 #resultado {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     padding: 1rem;
-    background: #eee;
+    background: #f0f8ff;
     border-radius: 4px;
     white-space: pre-line;
 }
 
-#error {
-    color: red;
-    font-weight: bold;
-    margin-top: 1rem;
+footer {
+    background: #080953;
+    color: #ffffff;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
 }
 
-footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
+@media (min-width: 768px) {
+    .vehiculo-info {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .vehiculo img {
+        max-width: 350px;
+        margin-right: 2rem;
+    }
+
+    .vehiculo-detalle {
+        flex: 1;
+    }
+
+    .container {
+        padding: 0 2rem;
+    }
 }
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    header h1 {
+        font-size: 3rem;
+    }
+
+    .vehiculo h2 {
+        font-size: 2rem;
+    }
+
+    .vehiculo img {
+        max-width: 400px;
+    }
+
+    .vehiculo-detalle p {
+        font-size: 1.4rem;
+    }
+
+    #simulador h2 {
+        font-size: 2rem;
+    }
+}
+
+
