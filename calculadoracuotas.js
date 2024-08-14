@@ -133,3 +133,10 @@ document.getElementById('calcular-btn').addEventListener('click', calcularCuotas
 document.getElementById('amortizacion-btn').addEventListener('click', mostrarAmortizacion);
 
 document.addEventListener('DOMContentLoaded', cargarVehiculo);
+
+document.getElementById('limpiar-btn').addEventListener('click', function() {
+    document.getElementById('monto').value = '';
+    document.getElementById('tasa').value = '';
+    document.getElementById('plazo').value = '';
+    document.getElementById('resultado').innerText = '';
+});
