@@ -1,23 +1,70 @@
-document.getElementById('financiar-ford').addEventListener('click', function() {
-    document.getElementById('monto').value = 1000000;  // Monto del Ford Ka
-    document.getElementById('tasa').value = 1;         // Tasa de interés
-    document.getElementById('plazo').value = 24;        // Plazo en meses
-    document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' }); // Redirigir al simulador de cuotas
-});
+const vehiculos = [
+    {
+        id: 'ford',
+        nombre: 'Ford Ka Viral',
+        precio: 1000000,
+        tasa: 1,
+        plazo: 24,
+        img: './assets/fordka.jpeg'
+    },
+    {
+        id: 'fiat',
+        nombre: 'Fiat Cronos',
+        precio: 5000000,
+        tasa: 2,
+        plazo: 24,
+        img: './assets/fiatcronos.jpeg'
+    },
+    {
+        id: 'ferrari',
+        nombre: 'Ferrari Enzo',
+        precio: 10000000,
+        tasa: 4,
+        plazo: 48,
+        img: './assets/ferrarienzo.jpeg'
+    }
+];
 
-document.getElementById('financiar-fiat').addEventListener('click', function() {
-    document.getElementById('monto').value = 5000000;  // Monto del Fiat Cronos
-    document.getElementById('tasa').value = 2;        // Tasa de interés
-    document.getElementById('plazo').value = 24;       // Plazo en meses
-    document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' }); // Redirigir al simulador de cuotas
-});
 
-document.getElementById('financiar-ferrari').addEventListener('click', function() {
-    document.getElementById('monto').value = 10000000;  // Monto del Ferrari Enzo
-    document.getElementById('tasa').value = 4;         // Tasa de interés
-    document.getElementById('plazo').value = 48;        // Plazo en meses
-    document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' }); // Redirigir al simulador de cuotas
-});
+function cargarVehiculos() {
+    const contenedor = document.querySelector('main');
+    vehiculos.forEach(vehiculo => {
+        const vehiculoSeccion = document.createElement('section');
+        vehiculoSeccion.id = `vehiculo-${vehiculo.id}`;
+        vehiculoSeccion.classList.add('vehiculo');
+
+        vehiculoSeccion.innerHTML = `
+            <h2>${vehiculo.nombre}</h2>
+            <div class="vehiculo-info">
+                <img src="${vehiculo.img}" alt="${vehiculo.nombre}">
+                <div class="vehiculo-detalle">
+                    <p>Precio: $${vehiculo.precio.toLocaleString()}</p>
+                    <p>Tasa de interés: ${vehiculo.tasa}%</p>
+                    <p>Plazo: ${vehiculo.plazo} meses</p>
+                    <button class="financiar-btn" data-id="${vehiculo.id}">Calculá la financiación</button>
+                </div>
+            </div>
+        `;
+        contenedor.insertBefore(vehiculoSeccion, document.getElementById('simulador'));
+    });
+
+    agregarEventosFinanciacion();
+}
+
+
+function agregarEventosFinanciacion() {
+    const botones = document.querySelectorAll('.financiar-btn');
+    botones.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const vehiculo = vehiculos.find(v => v.id === this.getAttribute('data-id'));
+            document.getElementById('monto').value = vehiculo.precio;
+            document.getElementById('tasa').value = vehiculo.tasa;
+            document.getElementById('plazo').value = vehiculo.plazo;
+            document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+}
+
 
 class Vehiculo {
     constructor(monto, tasa, plazo) {
@@ -41,7 +88,6 @@ let tasaMensual;
 let cuota;
 let cuotas = [];
 
-// Función para calcular las cuotas mensuales
 function calcularCuotas() {
     const monto = parseFloat(document.getElementById('monto').value);
     const tasa = parseFloat(document.getElementById('tasa').value);
@@ -59,15 +105,12 @@ function calcularCuotas() {
 
     const vehiculo = new Vehiculo(monto, tasa, plazo);
     guardarVehiculo(vehiculo);
-    console.log(vehiculo);
 }
 
-// Función para validar los inputs
 function validarInputs(monto, tasa, plazo) {
     return !(isNaN(monto) || isNaN(tasa) || isNaN(plazo) || monto <= 0 || tasa <= 0 || plazo <= 0);
 }
 
-// Función para mostrar el plan de amortización
 function mostrarAmortizacion() {
     const resultado = document.getElementById('resultado');
     resultado.innerText = ''; 
@@ -76,7 +119,7 @@ function mostrarAmortizacion() {
     const plazo = parseInt(document.getElementById('plazo').value);
     let mes = 1;
 
-    cuotas = []; // Resetear el array de cuotas
+    cuotas = [];
 
     while (montoRestante > 0 && mes <= plazo) {
         const interes = montoRestante * tasaMensual;
@@ -97,16 +140,13 @@ function mostrarAmortizacion() {
     }
 
     guardarCuotas(cuotas);
-    console.log(cuotas); // Mostrar las cuotas en la consola
 }
 
-// Función para mostrar errores
 function mostrarError(mensaje) {
     const resultado = document.getElementById('resultado');
     resultado.innerHTML = `<p id="error">${mensaje}</p>`;
 }
 
-// Funciones para guardar y cargar datos en el Storage
 function guardarVehiculo(vehiculo) {
     localStorage.setItem('vehiculo', JSON.stringify(vehiculo));
 }
@@ -128,7 +168,6 @@ function cargarCuotas() {
     return JSON.parse(localStorage.getItem('cuotas')) || [];
 }
 
-// Event Listeners
 document.getElementById('calcular-btn').addEventListener('click', calcularCuotas);
 document.getElementById('amortizacion-btn').addEventListener('click', mostrarAmortizacion);
 
@@ -139,5 +178,7 @@ document.getElementById('limpiar-btn').addEventListener('click', function() {
     document.getElementById('resultado').innerText = '';
 });
 
-document.addEventListener('DOMContentLoaded', cargarVehiculo);
-
+document.addEventListener('DOMContentLoaded', function() {
+    cargarVehiculo();
+    cargarVehiculos();  
+});
