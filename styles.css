@@ -7,7 +7,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
-    background-color: #06b7ec;
+    background-color: #f4f4f4;
     color: #333;
     display: flex;
     flex-direction: column;
@@ -22,16 +22,18 @@ body {
 }
 
 header {
-    background: #080953;
+    background: #002b5c;
     color: #ffffff;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
 }
 
 header nav ul {
@@ -48,10 +50,12 @@ header nav ul li a {
     color: #ffffff;
     text-decoration: none;
     font-size: 1.2rem;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
 }
 
 header nav ul li a:hover {
-    text-decoration: underline;
+    color: #ffcb05;
 }
 
 main {
@@ -60,16 +64,21 @@ main {
 }
 
 .vehiculo {
-    background: #34b8e0;
+    background: #ffffff;
     padding: 2rem;
     margin-bottom: 3rem;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.vehiculo:hover {
+    transform: translateY(-5px);
 }
 
 .vehiculo h2 {
     margin-bottom: 1rem;
-    color: #00264d;
+    color: #002b5c;
     font-size: 1.8rem;
 }
 
@@ -86,7 +95,7 @@ main {
     height: auto;
     margin-bottom: 1rem;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .vehiculo-detalle {
@@ -101,31 +110,32 @@ main {
 }
 
 .vehiculo-detalle button {
-    background: #00264d;
-    color: #fff;
+    background: #ffcb05;
+    color: #002b5c;
     border: none;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 4px;
-    transition: background 0.3s;
+    transition: background 0.3s ease;
 }
 
 .vehiculo-detalle button:hover {
-    background: #004080;
+    background: #002b5c;
+    color: #ffffff;
 }
 
 #simulador {
-    background: #7e5454;
+    background: #ffffff;
     padding: 2rem;
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 3rem;
 }
 
 #simulador h2 {
     margin-bottom: 1.5rem;
-    color: #00264d;
+    color: #002b5c;
     font-size: 1.8rem;
 }
 
@@ -133,7 +143,7 @@ form label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #00264d;
+    color: #002b5c;
 }
 
 form input {
@@ -143,38 +153,47 @@ form input {
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+form input:focus {
+    border-color: #ffcb05;
+    outline: none;
 }
 
 form button {
-    background: #00264d;
-    color: #fff;
+    background: #002b5c;
+    color: #ffffff;
     border: none;
     padding: 0.75rem 1.5rem;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 4px;
     margin-right: 1rem;
-    transition: background 0.3s;
+    transition: background 0.3s ease;
 }
 
 form button:hover {
-    background: #2b5d9b;
+    background: #ffcb05;
+    color: #002b5c;
 }
 
 #resultado {
     margin-top: 1.5rem;
     padding: 1rem;
-    background: #f0f8ff;
+    background: #f4f8ff;
     border-radius: 4px;
     white-space: pre-line;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 footer {
-    background: #080953;
+    background: #002b5c;
     color: #ffffff;
     text-align: center;
     padding: 1.5rem 0;
     margin-top: 2rem;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 768px) {
@@ -204,7 +223,7 @@ footer {
     }
 
     header h1 {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
 
     .vehiculo h2 {
@@ -223,5 +242,21 @@ footer {
         font-size: 2rem;
     }
 }
+
+#resultado {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f4f8ff;
+    border-radius: 4px;
+    white-space: pre-line;
+}
+
+#resultado canvas {
+    max-width: 100%;
+    height: auto;
+    margin-top: 2rem;
+    border-radius: 4px;
+}
+
 
 

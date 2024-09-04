@@ -1,70 +1,40 @@
-const vehiculos = [
+const vehiculosJSON = `
+[
     {
-        id: 'ford',
-        nombre: 'Ford Ka Viral',
-        precio: 1000000,
-        tasa: 1,
-        plazo: 24,
-        img: './assets/fordka.jpeg'
+        "id": "ford",
+        "nombre": "Ford Ka Viral",
+        "precio": 1000000,
+        "tasa": 1,
+        "plazo": 24,
+        "img": "./assets/fordka.jpeg"
     },
     {
-        id: 'fiat',
-        nombre: 'Fiat Cronos',
-        precio: 5000000,
-        tasa: 2,
-        plazo: 24,
-        img: './assets/fiatcronos.jpeg'
+        "id": "fiat",
+        "nombre": "Fiat Cronos",
+        "precio": 5000000,
+        "tasa": 2,
+        "plazo": 24,
+        "img": "./assets/fiatcronos.jpeg"
     },
     {
-        id: 'ferrari',
-        nombre: 'Ferrari Enzo',
-        precio: 10000000,
-        tasa: 4,
-        plazo: 48,
-        img: './assets/ferrarienzo.jpeg'
+        "id": "ferrari",
+        "nombre": "Ferrari Enzo",
+        "precio": 10000000,
+        "tasa": 4,
+        "plazo": 48,
+        "img": "./assets/ferrarienzo.jpeg"
     }
-];
+]
+`;
 
-
-function cargarVehiculos() {
-    const contenedor = document.querySelector('main');
-    vehiculos.forEach(vehiculo => {
-        const vehiculoSeccion = document.createElement('section');
-        vehiculoSeccion.id = `vehiculo-${vehiculo.id}`;
-        vehiculoSeccion.classList.add('vehiculo');
-
-        vehiculoSeccion.innerHTML = `
-            <h2>${vehiculo.nombre}</h2>
-            <div class="vehiculo-info">
-                <img src="${vehiculo.img}" alt="${vehiculo.nombre}">
-                <div class="vehiculo-detalle">
-                    <p>Precio: $${vehiculo.precio.toLocaleString()}</p>
-                    <p>Tasa de interés: ${vehiculo.tasa}%</p>
-                    <p>Plazo: ${vehiculo.plazo} meses</p>
-                    <button class="financiar-btn" data-id="${vehiculo.id}">Calculá la financiación</button>
-                </div>
-            </div>
-        `;
-        contenedor.insertBefore(vehiculoSeccion, document.getElementById('simulador'));
-    });
-
-    agregarEventosFinanciacion();
-}
-
-
-function agregarEventosFinanciacion() {
-    const botones = document.querySelectorAll('.financiar-btn');
-    botones.forEach(boton => {
-        boton.addEventListener('click', function() {
-            const vehiculo = vehiculos.find(v => v.id === this.getAttribute('data-id'));
-            document.getElementById('monto').value = vehiculo.precio;
-            document.getElementById('tasa').value = vehiculo.tasa;
-            document.getElementById('plazo').value = vehiculo.plazo;
-            document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' });
-        });
+function obtenerDatosVehiculos() {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            const vehiculos = JSON.parse(vehiculosJSON);
+            resolve(vehiculos);
+        }, 1000); 
     });
 }
-
 
 class Vehiculo {
     constructor(monto, tasa, plazo) {
@@ -87,6 +57,50 @@ class Cuota {
 let tasaMensual;
 let cuota;
 let cuotas = [];
+
+async function cargarVehiculos() {
+    try {
+        const vehiculos = await obtenerDatosVehiculos();
+        const contenedor = document.querySelector('main');
+
+        vehiculos.forEach(vehiculo => {
+            const vehiculoSeccion = document.createElement('section');
+            vehiculoSeccion.id = `vehiculo-${vehiculo.id}`;
+            vehiculoSeccion.classList.add('vehiculo', 'animate__animated', 'animate__fadeIn');
+
+            vehiculoSeccion.innerHTML = `
+                <h2>${vehiculo.nombre}</h2>
+                <div class="vehiculo-info">
+                    <img src="${vehiculo.img}" alt="${vehiculo.nombre}">
+                    <div class="vehiculo-detalle">
+                        <p>Precio: $${vehiculo.precio.toLocaleString()}</p>
+                        <p>Tasa de interés: ${vehiculo.tasa}%</p>
+                        <p>Plazo: ${vehiculo.plazo} meses</p>
+                        <button class="financiar-btn" data-id="${vehiculo.id}">Calculá la financiación</button>
+                    </div>
+                </div>
+            `;
+            contenedor.insertBefore(vehiculoSeccion, document.getElementById('simulador'));
+        });
+
+        agregarEventosFinanciacion(vehiculos);
+    } catch (error) {
+        console.error('Error al cargar los vehículos:', error);
+    }
+}
+
+function agregarEventosFinanciacion(vehiculos) {
+    const botones = document.querySelectorAll('.financiar-btn');
+    botones.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const vehiculo = vehiculos.find(v => v.id === this.getAttribute('data-id'));
+            document.getElementById('monto').value = vehiculo.precio;
+            document.getElementById('tasa').value = vehiculo.tasa;
+            document.getElementById('plazo').value = vehiculo.plazo;
+            document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+}
 
 function calcularCuotas() {
     const monto = parseFloat(document.getElementById('monto').value);
@@ -113,7 +127,7 @@ function validarInputs(monto, tasa, plazo) {
 
 function mostrarAmortizacion() {
     const resultado = document.getElementById('resultado');
-    resultado.innerText = ''; 
+    resultado.innerHTML = ''; 
 
     let montoRestante = parseFloat(document.getElementById('monto').value);
     const plazo = parseInt(document.getElementById('plazo').value);
@@ -140,6 +154,8 @@ function mostrarAmortizacion() {
     }
 
     guardarCuotas(cuotas);
+
+    mostrarGraficoAmortizacion();
 }
 
 function mostrarError(mensaje) {
@@ -168,7 +184,66 @@ function cargarCuotas() {
     return JSON.parse(localStorage.getItem('cuotas')) || [];
 }
 
+function mostrarGraficoAmortizacion() {
+    const ctx = document.getElementById('chart').getContext('2d');
+    const labels = cuotas.map(cuota => `Mes ${cuota.mes}`);
+    const dataPrincipal = cuotas.map(cuota => parseFloat(cuota.principal));
+    const dataInteres = cuotas.map(cuota => parseFloat(cuota.interes));
+
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+
+    window.myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Principal',
+                    data: dataPrincipal,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Interés',
+                    data: dataInteres,
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Monto en Pesos'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Meses'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Amortización del Préstamo'
+                }
+            }
+        }
+    });
+}
+
 document.getElementById('calcular-btn').addEventListener('click', calcularCuotas);
+
 document.getElementById('amortizacion-btn').addEventListener('click', mostrarAmortizacion);
 
 document.getElementById('limpiar-btn').addEventListener('click', function() {
@@ -176,6 +251,11 @@ document.getElementById('limpiar-btn').addEventListener('click', function() {
     document.getElementById('tasa').value = '';
     document.getElementById('plazo').value = '';
     document.getElementById('resultado').innerText = '';
+    if (window.myChart) {
+        window.myChart.destroy();
+    }
+    localStorage.removeItem('vehiculo');
+    localStorage.removeItem('cuotas');
 });
 
 document.addEventListener('DOMContentLoaded', function() {
