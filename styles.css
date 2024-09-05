@@ -243,20 +243,3 @@ footer {
     }
 }
 
-#resultado {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    background: #f4f8ff;
-    border-radius: 4px;
-    white-space: pre-line;
-}
-
-#resultado canvas {
-    max-width: 100%;
-    height: auto;
-    margin-top: 2rem;
-    border-radius: 4px;
-}
-
-
-

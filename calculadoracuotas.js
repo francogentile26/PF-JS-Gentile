@@ -27,12 +27,58 @@ const vehiculosJSON = `
 ]
 `;
 
-function obtenerDatosVehiculos() {
+async function cargarVehiculos() {
+    try {
+        const vehiculos = await obtenerDatosVehiculos();
+        const contenedor = document.querySelector('main');
+
+        vehiculos.forEach(vehiculo => {
+            const vehiculoSeccion = document.createElement('section');
+            vehiculoSeccion.id = `vehiculo-${vehiculo.id}`;
+            vehiculoSeccion.classList.add('vehiculo', 'animate__animated', 'animate__fadeIn');
+
+            vehiculoSeccion.innerHTML = `
+                <h2>${vehiculo.nombre}</h2>
+                <div class="vehiculo-info">
+                    <img src="${vehiculo.img}" alt="${vehiculo.nombre}">
+                    <div class="vehiculo-detalle">
+                        <p>Precio: $${vehiculo.precio.toLocaleString()}</p>
+                        <p>Tasa de interés: ${vehiculo.tasa}%</p>
+                        <p>Plazo: ${vehiculo.plazo} meses</p>
+                        <div class="botones">
+                            <button class="financiar-btn" data-id="${vehiculo.id}">Calculá la financiación</button>
+                            <button class="agregar-carrito-btn" data-id="${vehiculo.id}">Agregar al carrito</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            contenedor.insertBefore(vehiculoSeccion, document.getElementById('simulador'));
+        });
+
+        agregarEventosFinanciacion(vehiculos);
+        agregarEventosCarrito(vehiculos); 
+    } catch (error) {
+        console.error('Error al cargar los vehículos:', error);
+    }
+}
+
+function agregarEventosCarrito(vehiculos) {
+    const botonesCarrito = document.querySelectorAll('.agregar-carrito-btn');
+    botonesCarrito.forEach(boton => {
+        boton.addEventListener('click', function() {
+            const vehiculo = vehiculos.find(v => v.id === this.getAttribute('data-id'));
+            agregarAlCarrito(vehiculo);
+            alert(`${vehiculo.nombre} ha sido agregado al carrito.`);
+        });
+    });
+}
+
+async function obtenerDatosVehiculos() {
     return new Promise((resolve) => {
         setTimeout(() => {
             const vehiculos = JSON.parse(vehiculosJSON);
             resolve(vehiculos);
-        }, 1000); 
+        }, 1000);
     });
 }
 
@@ -115,7 +161,7 @@ function calcularCuotas() {
     tasaMensual = tasa / 100 / 12;
     cuota = monto * (tasaMensual * Math.pow(1 + tasaMensual, plazo)) / (Math.pow(1 + tasaMensual, plazo) - 1);
 
-    document.getElementById('resultado').innerText = `Cuota mensual: ${cuota.toFixed(2)} Pesos.`;
+    document.getElementById('resultado').innerText = `Cuota mensual: $${cuota.toFixed(2)} Pesos.`;
 
     const vehiculo = new Vehiculo(monto, tasa, plazo);
     guardarVehiculo(vehiculo);
@@ -148,7 +194,7 @@ function mostrarAmortizacion() {
         const cuotaObj = new Cuota(mes, cuota.toFixed(2), interes.toFixed(2), principal.toFixed(2), montoRestante.toFixed(2));
         cuotas.push(cuotaObj);
 
-        resultado.innerText += `Mes ${mes}: Cuota: ${cuota.toFixed(2)}, Interés: ${interes.toFixed(2)}, Principal: ${principal.toFixed(2)}, Monto Restante: ${montoRestante.toFixed(2)}\n`;
+        resultado.innerText += `Mes ${mes}: Cuota: $${cuota.toFixed(2)}, Interés: $${interes.toFixed(2)}, Principal: $${principal.toFixed(2)}, Monto Restante: $${montoRestante.toFixed(2)}\n`;
 
         mes++;
     }
@@ -185,7 +231,10 @@ function cargarCuotas() {
 }
 
 function mostrarGraficoAmortizacion() {
-    const ctx = document.getElementById('chart').getContext('2d');
+    const ctx = document.createElement('canvas');
+    ctx.id = 'chart';
+    document.getElementById('resultado').appendChild(ctx);
+
     const labels = cuotas.map(cuota => `Mes ${cuota.mes}`);
     const dataPrincipal = cuotas.map(cuota => parseFloat(cuota.principal));
     const dataInteres = cuotas.map(cuota => parseFloat(cuota.interes));
@@ -260,5 +309,5 @@ document.getElementById('limpiar-btn').addEventListener('click', function() {
 
 document.addEventListener('DOMContentLoaded', function() {
     cargarVehiculo();
-    cargarVehiculos();  
+    cargarVehiculos();
 });
