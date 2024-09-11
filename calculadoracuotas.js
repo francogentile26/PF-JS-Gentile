@@ -62,17 +62,6 @@ async function cargarVehiculos() {
     }
 }
 
-function agregarEventosCarrito(vehiculos) {
-    const botonesCarrito = document.querySelectorAll('.agregar-carrito-btn');
-    botonesCarrito.forEach(boton => {
-        boton.addEventListener('click', function() {
-            const vehiculo = vehiculos.find(v => v.id === this.getAttribute('data-id'));
-            agregarAlCarrito(vehiculo);
-            alert(`${vehiculo.nombre} ha sido agregado al carrito.`);
-        });
-    });
-}
-
 async function obtenerDatosVehiculos() {
     return new Promise((resolve) => {
         setTimeout(() => {
